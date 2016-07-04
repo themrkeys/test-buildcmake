@@ -1,0 +1,24 @@
+
+[launcher]
+author = rfaircloth
+description = Replacment for default certificates for secure configuration
+version = @VERSION_SHORT@
+# @VERSION@ @HASH@
+# @GIT_REFSPEC@
+# @GIT_SHA1@
+
+[package]
+id = BaseKit_All_Certificates
+check_for_updates = false
+
+[install]
+build = @VERSION_LONG@
+state_change_requires_restart = true
+allows_disable = false
+
+[ui]
+is_visible = false
+show_in_nav = false
+is_manageable = false
+label = = BaseKit Certificate Replacements
+docs_section_override = https://securitykit.atlassian.net/wiki/display/GD/Option%3A+Replace+default+certificates
