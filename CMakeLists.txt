@@ -5,7 +5,7 @@ SET(AUTHOR "Ryan Faircloth")
 SET(CONTACT "rfaircloth@splunk.com")
 SET(SUMMARY "Base configuration for certificates")
 
-LIST(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+LIST(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules")
 INCLUDE(UseBackportedModules)
 
 # Declare modules
