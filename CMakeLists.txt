@@ -1,0 +1,64 @@
+cmake_minimum_required (VERSION 3.0)
+PROJECT(BaseKit_All_Certificates)
+SET(CMAKE_PROJECT_NAME "BaseKit_All_Certificates")
+SET(AUTHOR "Ryan Faircloth")
+SET(CONTACT "rfaircloth@splunk.com")
+SET(SUMMARY "Base configuration for certificates")
+
+LIST(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+INCLUDE(UseBackportedModules)
+
+# Declare modules
+INCLUDE(CPack)
+
+
+include(GetGitRevisionDescription)
+get_git_head_revision(GIT_REFSPEC GIT_SHA1)
+
+#git_describe(VERSION --dirty=-d )
+git_describe(VERSION "--tags --dirty=-d --all --match=v*" )
+
+
+#parse the version information into pieces.
+STRING(REGEX REPLACE "^v([0-9]+)\\..*" "\\1" VERSION_MAJOR "${VERSION}")
+STRING(REGEX REPLACE "^v[0-9]+\\.([0-9]+).*" "\\1" VERSION_MINOR "${VERSION}")
+STRING(REGEX REPLACE "^v[0-9]+\\.[0-9]+\\.([0-9]+).*" "\\1" VERSION_PATCH "${VERSION}")
+STRING(REGEX REPLACE "^v[0-9]+\\.[0-9]+\\.[0-9]+(.*)" "\\1" VERSION_SHA1 "${VERSION}")
+#SET(VERSION "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}")
+SET(VERSION_SHORT "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}")
+SET(VERSION_LONG "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}-${VERSION_SHA1}")
+
+
+# -----------------------------------------------------------------------------
+# Setup library output path
+# -----------------------------------------------------------------------------
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+
+
+CONFIGURE_FILE( ${CMAKE_SOURCE_DIR}/src/default/app.conf.in ${CMAKE_SOURCE_DIR}/src/default/app.conf )
+
+SET(CPACK_GENERATOR "TGZ")
+
+
+SET(CPACK_PACKAGE_DESCRIPTION ${SUMMARY})
+SET(CPACK_PACKAGE_DESCRIPTION_SUMMARY ${SUMMARY})
+
+SET(CPACK_PACKAGE_VENDOR ${AUTHOR})
+SET(CPACK_PACKAGE_CONTACT ${CONTACT})
+
+SET(CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_CURRENT_SOURCE_DIR}/ReadMe.txt")
+SET(CPACK_PACKAGE_VERSION_MAJOR ${VERSION_MAJOR})
+SET(CPACK_PACKAGE_VERSION_MINOR ${VERSION_MINOR})
+SET(CPACK_PACKAGE_VERSION_PATCH ${VERSION_PATCH})
+SET(CPACK_PACKAGE_VERSION ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH})
+
+SET(CPACK_PACKAGE_FILE_NAME "${CMAKE_PROJECT_NAME}_${MAJOR_VERSION}.${MINOR_VERSION}.${VERSION_PATCH}")
+SET(CPACK_SOURCE_PACKAGE_FILE_NAME "${CMAKE_PROJECT_NAME}_${MAJOR_VERSION}.${MINOR_VERSION}.${VERSION_PATCH}")
+
+install(DIRECTORY default/ DESTINATION default
+	FILES_MATCHING PATTERN *.conf)
+
+install(DIRECTORY appserver/ DESTINATION appserver)
+
+install(DIRECTORY certs/ DESTINATION certs)
